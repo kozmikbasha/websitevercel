@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOZMIK© — We See What Others Can't</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Darker+Grotesque:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --white: #f5f3ee;
+    --black: #0a0a0a;
+    --accent: #c8ff00;
+    --gray: #aaa;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Darker Grotesque', sans-serif;
+  }
+
+  html { background: var(--black); }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--black);
+    color: var(--white);
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  #cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    top: 0; left: 0;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease;
+    mix-blend-mode: difference;
+    will-change: transform;
+  }
+  #cursor.big { width: 60px; height: 60px; }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px;
+    mix-blend-mode: difference;
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  #scroll-container {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  #scroll-container::-webkit-scrollbar { display: none; }
+
+  section {
+    height: 100vh;
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* HERO */
+  #hero {
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-logo {
+    font-family: var(--font-display);
+    font-size: clamp(72px, 14vw, 200px);
+    letter-spacing: 0.06em;
+    text-indent: 0.06em;
+    color: var(--white);
+    line-height: 1;
+    animation: heroFadeIn 1.2s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-tagline {
+    font-size: clamp(13px, 1.4vw, 18px);
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-top: 20px;
+    animation: heroFadeIn 1.2s ease 0.4s forwards;
+    opacity: 0;
+  }
+  .hero-tagline em { font-style: normal; color: var(--accent); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 48px;
+    left: 0; right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    animation: heroFadeIn 1s ease 0.9s forwards;
+    opacity: 0;
+  }
+  .hero-scroll span {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-indent: 0.26em;
+    text-transform: uppercase;
+    color: rgba(245,243,238,0.5);
+  }
+  .hero-line {
+    width: 1px; height: 56px;
+    background: rgba(245,243,238,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-line::after {
+    content: '';
+    position: absolute;
+    top: -100%; left: 0;
+    width: 100%; height: 100%;
+    background: var(--accent);
+    animation: scrollDown 1.8s ease infinite;
+  }
+
+  @keyframes heroFadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollDown {
+    0%   { top: -100%; }
+    100% { top: 100%; }
+  }
+
+  /* VIDEO SECTIONS */
+  .video-section { background: #000; }
+
+  .video-section video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #000;
+    pointer-events: none;
+  }
+
+  .video-label {
+    position: absolute;
+    bottom: 52px;
+    left: 48px;
+    z-index: 2;
+  }
+  .video-label .project-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5.5vw, 72px);
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 1;
+    display: block;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+  .video-label .project-tag {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 10px;
+    display: block;
+  }
+
+  .video-controls {
+    position: absolute;
+    bottom: 52px;
+    right: 48px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .video-btn, .fullscreen-btn {
+    width: 56px; height: 56px;
+    border: 1px solid rgba(245,243,238,0.4);
+    border-radius: 50%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    padding: 0;
+  }
+  .video-btn:hover, .fullscreen-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .video-btn svg, .fullscreen-btn svg { fill: var(--white); transition: fill 0.2s; }
+  .video-btn:hover svg, .fullscreen-btn:hover svg { fill: var(--black); }
+
+  /* MANIFESTO */
+  #manifesto {
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .manifesto-text {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 10vw, 140px);
+    letter-spacing: 0.02em;
+    line-height: 0.93;
+    text-align: center;
+    color: var(--white);
+    max-width: 960px;
+    padding: 0 48px;
+  }
+  .manifesto-text em { font-style: normal; color: var(--accent); }
+  .manifesto-sub {
+    margin-top: 36px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* ABOUT */
+  #about {
+    background: var(--white);
+    color: var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 48px 56px;
+    overflow: hidden;
+  }
+  .about-logo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 0 0;
+    flex: 1;
+    min-height: 0;
+  }
+  .about-horus {
+    height: 42vh;
+    max-height: 280px;
+    width: auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+  .about-tagline {
+    font-size: clamp(13px, 1.3vw, 17px);
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #333;
+    margin-top: 20px;
+  }
+  .about-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    width: 100%;
+    align-items: start;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    padding-top: 28px;
+    margin-top: 28px;
+  }
+  .about-headline {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 72px);
+    letter-spacing: 0.03em;
+    line-height: 0.92;
+    color: var(--black);
+  }
+  .about-body {
+    font-size: clamp(17px, 1.6vw, 23px);
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--black);
+  }
+  .about-founder {
+    margin-top: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+  }
+
+  /* SERVICES */
+  #services {
+    background: var(--black);
+    display: flex;
+    align-items: flex-end;
+    padding: 80px 48px;
+  }
+  .services-inner { width: 100%; }
+  .services-label {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 90px);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+    color: var(--white);
+    margin-bottom: 48px;
+    display: block;
+  }
+  .services-list {
+    list-style: none;
+    border-top: 1px solid rgba(245,243,238,0.2);
+  }
+  .services-list li {
+    border-bottom: 1px solid rgba(245,243,238,0.2);
+    padding: 22px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: padding-left 0.3s ease;
+    cursor: none;
+  }
+  .services-list li:hover { padding-left: 20px; }
+  .service-name {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 4.2vw, 56px);
+    letter-spacing: 0.04em;
+    color: var(--white);
+    transition: color 0.2s;
+  }
+  .services-list li:hover .service-name { color: var(--accent); }
+  .service-num { font-size: 13px; font-weight: 600; color: #bbb; letter-spacing: 0.12em; }
+
+  /* CONTACT */
+  #contact {
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 80px 48px 48px;
+    border-top: 1px solid rgba(245,243,238,0.15);
+  }
+  .contact-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .contact-headline {
+    font-family: var(--font-display);
+    font-size: clamp(60px, 11vw, 160px);
+    letter-spacing: 0.01em;
+    line-height: 0.9;
+    color: var(--white);
+  }
+  .contact-headline em { font-style: normal; color: var(--accent); }
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 8px;
+    text-align: right;
+  }
+  .contact-info a {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    justify-content: flex-end;
+  }
+  .contact-info a:hover { opacity: 1; color: var(--accent); }
+  .contact-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+  .contact-bottom .logo-large {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: 0.08em;
+    color: rgba(245,243,238,0.12);
+  }
+  .contact-bottom .copyright { font-size: 12px; font-weight: 500; color: #aaa; letter-spacing: 0.1em; }
+
+  /* PROGRESS DOTS */
+  #progress {
+    position: fixed;
+    left: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .progress-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(245,243,238,0.25);
+    transition: background 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+  .progress-dot.active { background: var(--accent); transform: scale(1.5); }
+
+  /* TAP TO UNMUTE */
+  #unmute-prompt {
+    position: fixed;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(10,10,10,0.75);
+    border: 1px solid rgba(245,243,238,0.25);
+    border-radius: 100px;
+    padding: 12px 22px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    animation: promptPulse 2s ease infinite;
+  }
+  #unmute-prompt.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(12px);
+  }
+  #unmute-prompt svg { fill: var(--accent); flex-shrink: 0; }
+  #unmute-prompt span {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--white);
+    white-space: nowrap;
+  }
+  @keyframes promptPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(200,255,0,0); }
+    50%       { box-shadow: 0 0 0 6px rgba(200,255,0,0.15); }
+  }
+
+  /* FADE UP */
+  .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.85s ease, transform 0.85s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* HAMBURGER */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    z-index: 200;
+  }
+  .nav-toggle span {
+    display: block; width: 26px; height: 2px;
+    background: var(--white); border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* MOBILE VIDEO WRAPPER */
+  .mobile-video-wrapper { height: 100%; }
+  .video-16-9-container { position: relative; width: 100%; height: 100%; }
+  .video-16-9-container video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+  @media (pointer: coarse) { body { cursor: auto; } #cursor { display: none; } }
+
+  @media (max-width: 1024px) and (min-width: 769px) {
+    nav { padding: 22px 32px; }
+    .about-inner { gap: 40px; }
+    #about { padding: 0 32px 52px; }
+    #services { padding: 60px 32px 48px; }
+    #contact { padding: 60px 32px 48px; }
+    .video-label { left: 32px; }
+    .video-controls { right: 32px; }
+    #progress { left: 24px; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; mix-blend-mode: normal; background: rgba(10,10,10,0.85); }
+    .nav-toggle { display: flex; }
+    .nav-links {
+      display: flex; flex-direction: column; position: fixed; inset: 0;
+      background: var(--black); align-items: center; justify-content: center;
+      gap: 36px; z-index: 150; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .nav-links.open { opacity: 1; pointer-events: all; }
+    .nav-links a { font-size: 28px; letter-spacing: 0.12em; font-weight: 700; }
+
+    .video-section { height: 100svh; }
+
+    .mobile-video-wrapper {
+      display: flex; flex-direction: column;
+      height: 100svh; justify-content: center; background: #000;
+    }
+    .video-16-9-container {
+      position: relative; width: 100%;
+      padding-top: 56.25%; flex-shrink: 0;
+    }
+    .video-16-9-container video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
+    }
+    .mobile-video-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 20px 10px; background: var(--black);
+    }
+    .video-label { position: static; }
+    .video-label .project-title { font-size: clamp(22px, 6vw, 36px); }
+    .video-label .project-tag { margin-top: 4px; font-size: 11px; }
+    .video-controls { position: static; gap: 8px; }
+    .video-btn, .fullscreen-btn { width: 40px; height: 40px; }
+
+    #progress { left: 10px; }
+    .progress-dot { width: 5px; height: 5px; }
+
+    .about-inner { grid-template-columns: 1fr; gap: 24px; }
+    #about { padding: 0 24px 40px; }
+    .about-horus { height: 30vh; max-height: 200px; }
+    .about-headline { font-size: clamp(32px, 8vw, 52px); }
+    .about-body { font-size: 16px; }
+    #services { padding: 80px 24px 40px; }
+    #contact { padding: 80px 24px 40px; }
+    .contact-top { flex-direction: column; gap: 28px; }
+    .contact-info { text-align: left; }
+    .contact-info a { justify-content: flex-start; font-size: 18px; }
+    .manifesto-text { padding: 0 24px; }
+  }
+
+  @media (max-width: 900px) and (orientation: landscape) {
+    .video-section { height: 100svh; }
+    .mobile-video-wrapper { height: 100svh; }
+    .video-16-9-container { padding-top: 0; height: 100svh; }
+    .video-16-9-container video { object-fit: cover; }
+    .mobile-video-meta { display: none; }
+    .video-label { position: absolute; bottom: 20px; left: 20px; z-index: 2; }
+    .video-controls { position: absolute; bottom: 20px; right: 20px; z-index: 2; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<nav>
+  <a class="logo" href="#hero">KOZMIK©</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#s0">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div id="progress"></div>
+
+<!-- Tap to unmute prompt -->
+<div id="unmute-prompt">
+  <svg width="18" height="18" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+  <span>Tap to unmute</span>
+</div>
+
+<div id="scroll-container">
+
+  <!-- HERO -->
+  <section id="hero">
+    <h1 class="hero-logo">KOZMIK©</h1>
+    <p class="hero-tagline">We See What <em>Others</em> Can't</p>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="hero-line"></div>
+    </div>
+  </section>
+
+  <!-- 1. Dubai Phone — Snow Mountain -->
+  <section class="video-section" id="s0">
+    <div class="mobile-video-wrapper">
+      <div class="video-16-9-container">
+        <video playsinline loop preload="auto" muted>
+          <source src="https://vz-95cb1836-1cb.b-cdn.net/aba47b91-0e04-48d4-b918-4e30857ff76c/play_1080p.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="mobile-video-meta">
+        <div class="video-label fade-up">
+          <span class="project-title">Dubai Phone</span>
+          <span class="project-tag">Snow Mountain</span>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+          <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+          <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+        </div>
+      </div>
+    </div>
+    <div class="video-label fade-up">
+      <span class="project-title">Dubai Phone</span>
+      <span class="project-tag">Snow Mountain</span>
+    </div>
+    <div class="video-controls">
+      <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+      <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+      <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+    </div>
+  </section>
+
+  <!-- 2. Dubai Phone — The Family Dinner -->
+  <section class="video-section" id="s1">
+    <div class="mobile-video-wrapper">
+      <div class="video-16-9-container">
+        <video playsinline loop preload="auto" muted>
+          <source src="https://vz-95cb1836-1cb.b-cdn.net/9ab7ac6b-f8a3-4b73-90b2-ee8edfbbb70a/play_1080p.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="mobile-video-meta">
+        <div class="video-label fade-up">
+          <span class="project-title">Dubai Phone</span>
+          <span class="project-tag">The Family Dinner</span>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+          <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+          <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+        </div>
+      </div>
+    </div>
+    <div class="video-label fade-up">
+      <span class="project-title">Dubai Phone</span>
+      <span class="project-tag">The Family Dinner</span>
+    </div>
+    <div class="video-controls">
+      <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+      <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+      <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+    </div>
+  </section>
+
+  <!-- 3. Dubai Phone — The Couple -->
+  <section class="video-section" id="s2">
+    <div class="mobile-video-wrapper">
+      <div class="video-16-9-container">
+        <video playsinline loop preload="auto" muted>
+          <source src="https://vz-95cb1836-1cb.b-cdn.net/eeb15e92-6b43-4413-8dcc-1026581d1674/play_1080p.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="mobile-video-meta">
+        <div class="video-label fade-up">
+          <span class="project-title">Dubai Phone</span>
+          <span class="project-tag">The Couple</span>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+          <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+          <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+        </div>
+      </div>
+    </div>
+    <div class="video-label fade-up">
+      <span class="project-title">Dubai Phone</span>
+      <span class="project-tag">The Couple</span>
+    </div>
+    <div class="video-controls">
+      <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+      <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+      <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section id="manifesto">
+    <p class="manifesto-text fade-up">WE SEE<br>WHAT <em>OTHERS</em><br>CAN'T</p>
+    <p class="manifesto-sub fade-up">Cairo, Egypt — Est. 2024</p>
+  </section>
+
+  <!-- 4. Al Morshedy -->
+  <section class="video-section" id="s3">
+    <div class="mobile-video-wrapper">
+      <div class="video-16-9-container">
+        <video playsinline loop preload="auto" muted>
+          <source src="https://vz-95cb1836-1cb.b-cdn.net/a2bf96ef-7d16-43c5-bb4f-084d170524fa/play_1080p.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="mobile-video-meta">
+        <div class="video-label fade-up">
+          <span class="project-title">Al Morshedy</span>
+          <span class="project-tag">MRTS — Commercial</span>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+          <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+          <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+        </div>
+      </div>
+    </div>
+    <div class="video-label fade-up">
+      <span class="project-title">Al Morshedy</span>
+      <span class="project-tag">MRTS — Commercial</span>
+    </div>
+    <div class="video-controls">
+      <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+      <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+      <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+    </div>
+  </section>
+
+  <!-- 5. Chic Homz -->
+  <section class="video-section" id="s4">
+    <div class="mobile-video-wrapper">
+      <div class="video-16-9-container">
+        <video playsinline loop preload="auto" muted>
+          <source src="https://vz-95cb1836-1cb.b-cdn.net/b58dbc72-cded-4d10-8883-5e4b0c3a81b1/play_1080p.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="mobile-video-meta">
+        <div class="video-label fade-up">
+          <span class="project-title">Chic Homz</span>
+          <span class="project-tag">Campaign</span>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+          <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+          <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+        </div>
+      </div>
+    </div>
+    <div class="video-label fade-up">
+      <span class="project-title">Chic Homz</span>
+      <span class="project-tag">Campaign</span>
+    </div>
+    <div class="video-controls">
+      <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+      <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+      <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+    </div>
+  </section>
+
+  <!-- 6. LG -->
+  <section class="video-section" id="s5">
+    <div class="mobile-video-wrapper">
+      <div class="video-16-9-container">
+        <video playsinline loop preload="auto" muted>
+          <source src="https://vz-95cb1836-1cb.b-cdn.net/e4478cee-875b-4e17-a57a-115d1a72da09/play_1080p.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="mobile-video-meta">
+        <div class="video-label fade-up">
+          <span class="project-title">LG</span>
+          <span class="project-tag">Campaign</span>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+          <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+          <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+        </div>
+      </div>
+    </div>
+    <div class="video-label fade-up">
+      <span class="project-title">LG</span>
+      <span class="project-tag">Campaign</span>
+    </div>
+    <div class="video-controls">
+      <button class="video-btn mute-btn" aria-label="Toggle sound"></button>
+      <button class="video-btn play-pause-btn" aria-label="Play/Pause"></button>
+      <button class="fullscreen-btn" aria-label="Fullscreen"></button>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-logo-wrap">
+      <img class="about-horus" src="horus-eye.png" alt="KOZMIK Eye of Horus">
+      <span class="about-tagline">We See What Others Can't</span>
+    </div>
+    <div class="about-inner">
+      <div>
+        <h2 class="about-headline fade-up">MULTI­DISCIPLINARY<br>CREATIVE<br>STUDIO</h2>
+      </div>
+      <div>
+        <p class="about-body fade-up">
+          Kozmik is a creative studio specializing in advertising campaigns, branded content, music, and post-production. We embed ourselves as your creative arm, studio partner, or specialist team — delivering across audio, art direction, and visual design. Whatever the brief demands, we make it extraordinary.
+        </p>
+        <p class="about-founder fade-up">Founded by Hazem Elkilany</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services-inner">
+      <span class="services-label">What we do</span>
+      <ul class="services-list">
+        <li><span class="service-name">Creative Direction</span><span class="service-num">01</span></li>
+        <li><span class="service-name">Audio Services</span><span class="service-num">02</span></li>
+        <li><span class="service-name">Art Direction</span><span class="service-num">03</span></li>
+        <li><span class="service-name">Creative Studio Partnership</span><span class="service-num">04</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-top">
+      <h2 class="contact-headline fade-up">LET'S<br>MAKE IT<br><em>EXTRA­ORDINARY</em></h2>
+      <div class="contact-info fade-up">
+        <a href="mailto:kozmikbasha@gmail.com">kozmikbasha@gmail.com</a>
+        <a href="https://www.instagram.com/kozmikstudioz/" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          @kozmikstudioz
+        </a>
+        <a href="#">Cairo, Egypt</a>
+      </div>
+    </div>
+    <div class="contact-bottom">
+      <span class="logo-large">KOZMIK©</span>
+      <span class="copyright">©2026 Kozmik Studio. All rights reserved.</span>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const SVG_PLAY  = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  const SVG_PAUSE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+  const SVG_SOUND = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>';
+  const SVG_MUTED = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
+  const SVG_FULL  = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>';
+  const SVG_EXIT  = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>';
+
+  // ── Cursor ────────────────────────────────────────────────────
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+  }, { passive: true });
+  document.querySelectorAll('a, li, .video-btn, .fullscreen-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+
+  // ── Progress dots ─────────────────────────────────────────────
+  const scrollContainer = document.getElementById('scroll-container');
+  const sections = scrollContainer.querySelectorAll('section');
+  const progressEl = document.getElementById('progress');
+  sections.forEach(sec => {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    dot.addEventListener('click', () => sec.scrollIntoView({ behavior: 'smooth' }));
+    progressEl.appendChild(dot);
+  });
+  const dots = progressEl.querySelectorAll('.progress-dot');
+
+  // ── Nav ───────────────────────────────────────────────────────
+  document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) t.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  const navToggle = document.getElementById('nav-toggle');
+  const navLinks  = document.getElementById('nav-links');
+  if (navToggle) {
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      navToggle.classList.remove('open');
+      navLinks.classList.remove('open');
+    }));
+  }
+
+  // ── Global unmute state ───────────────────────────────────────
+  let userUnmuted = false;
+  const unmutePrompt = document.getElementById('unmute-prompt');
+
+  function unmuteAll() {
+    if (userUnmuted) return;
+    userUnmuted = true;
+    // Unmute every video
+    document.querySelectorAll('.video-section video').forEach(v => { v.muted = false; });
+    // Update all mute button icons
+    document.querySelectorAll('.mute-btn').forEach(b => b.innerHTML = SVG_SOUND);
+    // Hide the prompt
+    unmutePrompt.classList.add('hidden');
+  }
+
+  // Clicking the prompt unmutes
+  unmutePrompt.addEventListener('click', unmuteAll);
+
+  // Only show prompt when on a video section
+  function syncPrompt(sec) {
+    if (!userUnmuted && sec && sec.classList.contains('video-section')) {
+      unmutePrompt.classList.remove('hidden');
+    } else {
+      unmutePrompt.classList.add('hidden');
+    }
+  }
+
+  // ── Video players ─────────────────────────────────────────────
+  document.querySelectorAll('.video-section').forEach(section => {
+    const video     = section.querySelector('video');
+    const playBtns  = section.querySelectorAll('.play-pause-btn');
+    const muteBtns  = section.querySelectorAll('.mute-btn');
+    const fsBtns    = section.querySelectorAll('.fullscreen-btn');
+    const c16       = section.querySelector('.video-16-9-container') || section;
+
+    // Init button icons
+    playBtns.forEach(b => b.innerHTML = SVG_PLAY);
+    muteBtns.forEach(b => b.innerHTML = SVG_MUTED);
+    fsBtns.forEach(b   => b.innerHTML = SVG_FULL);
+
+    // Start muted (browser autoplay policy)
+    video.muted = true;
+
+    // Play/pause buttons
+    playBtns.forEach(btn => btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (video.paused) {
+        video.play();
+        playBtns.forEach(b => b.innerHTML = SVG_PAUSE);
+      } else {
+        video.pause();
+        playBtns.forEach(b => b.innerHTML = SVG_PLAY);
+      }
+    }));
+
+    // Mute button — also triggers global unmute on first press
+    muteBtns.forEach(btn => btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!userUnmuted) {
+        unmuteAll();
+      } else {
+        video.muted = !video.muted;
+        muteBtns.forEach(b => b.innerHTML = video.muted ? SVG_MUTED : SVG_SOUND);
+      }
+    }));
+
+    // Fullscreen
+    fsBtns.forEach(btn => btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        (c16.requestFullscreen || c16.webkitRequestFullscreen).call(c16);
+      } else {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      }
+    }));
+    const syncFs = () => {
+      const inFs = document.fullscreenElement || document.webkitFullscreenElement;
+      fsBtns.forEach(b => b.innerHTML = inFs ? SVG_EXIT : SVG_FULL);
+    };
+    document.addEventListener('fullscreenchange', syncFs);
+    document.addEventListener('webkitfullscreenchange', syncFs);
+  });
+
+  // ── Intersection observer: scroll in = play, scroll out = pause+reset ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const sec = entry.target;
+
+      if (entry.isIntersecting) {
+        // Progress dots
+        const idx = Array.from(sections).indexOf(sec);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+        // Pause + reset all other videos
+        document.querySelectorAll('.video-section').forEach(other => {
+          if (other === sec) return;
+          const v = other.querySelector('video');
+          if (!v) return;
+          v.pause();
+          v.currentTime = 0;
+          other.querySelectorAll('.play-pause-btn').forEach(b => b.innerHTML = SVG_PLAY);
+        });
+
+        // Play this video from start
+        if (sec.classList.contains('video-section')) {
+          const v = sec.querySelector('video');
+          if (v) {
+            v.currentTime = 0;
+            v.muted = !userUnmuted; // unmuted if user already clicked
+            v.play().catch(() => {});
+            sec.querySelectorAll('.play-pause-btn').forEach(b => b.innerHTML = SVG_PAUSE);
+            sec.querySelectorAll('.mute-btn').forEach(b => b.innerHTML = userUnmuted ? SVG_SOUND : SVG_MUTED);
+          }
+        }
+
+        syncPrompt(sec);
+
+        // Fade-up animations
+        sec.querySelectorAll('.fade-up').forEach((el, i) => {
+          setTimeout(() => el.classList.add('visible'), i * 120);
+        });
+
+      } else {
+        // Scrolled away
+        if (sec.classList.contains('video-section')) {
+          const v = sec.querySelector('video');
+          if (v) {
+            v.pause();
+            v.currentTime = 0;
+            sec.querySelectorAll('.play-pause-btn').forEach(b => b.innerHTML = SVG_PLAY);
+          }
+          unmutePrompt.classList.add('hidden');
+        }
+      }
+    });
+  }, { root: scrollContainer, threshold: 0.5 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
